@@ -1,6 +1,7 @@
 <?php
 
 use Config\Config;
+use Core\Router;
 
 require_once dirname(__DIR__) . '/Config/constants.php';
 require_once BASE_DIR . '/vendor/autoload.php';
@@ -9,14 +10,15 @@ $dotenv = \Dotenv\Dotenv::createUnsafeImmutable(BASE_DIR);
 $dotenv->load();
 
 try {
+    $router = new Router();
 
-    $pdo = new PDO(
-        'mysql:host=db;dbname=taxi',
-        Config::get('db.user'),
-        Config::get('db.password')
-    );
+    require_once BASE_DIR . '/routes/web.php';
 
-    dd($pdo);
+    if (!preg_match('/assets/i', $_SERVER['REQUEST_URI'])) {
+        $router->dispatch($_SERVER['REQUEST_URI']);
+    }
 } catch (PDOException $exception) {
+    dd('PDOException', $exception->getMessage());
+} catch (Exception $exception) {
     dd('Exception', $exception->getMessage());
 }
