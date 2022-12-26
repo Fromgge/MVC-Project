@@ -10,7 +10,6 @@ trait Queryable
 
     protected array $commands = [];
 
-    // Car::select(['id', 'model'...])
     public static function select(array $columns = ['*']): static
     {
         static::resetQuery();
@@ -22,7 +21,6 @@ trait Queryable
         return $obj;
     }
 
-    // INSERT INTO table () VALUES ()
     public static function create(array $data): int
     {
         $params = static::prepareQueryParams($data);
