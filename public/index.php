@@ -1,16 +1,19 @@
 <?php
 
 use Config\Config;
-use Core\Router;
 
 require_once dirname(__DIR__) . '/Config/constants.php';
 require_once BASE_DIR . '/vendor/autoload.php';
+
+if (!session_id()) {
+    session_start();
+}
 
 $dotenv = \Dotenv\Dotenv::createUnsafeImmutable(BASE_DIR);
 $dotenv->load();
 
 try {
-    $router = new Router();
+    $router = new \Core\Router();
 
     require_once BASE_DIR . '/routes/web.php';
 

@@ -37,8 +37,6 @@ class Router
             if ($controller->before($action)) {
                 call_user_func_array([$controller, $action], $this->params);
                 $controller->after($action);
-            } else {
-                dd('error');
             }
         }
     }
@@ -90,6 +88,8 @@ class Router
         return false;
     }
 
+    // parks/4/show
+    // parks/4/car/1
     protected function setParams(string $route, array $matches, array $params): array
     {
         preg_match_all('/\(\?P<[\w]+>\\\\(\w[\+])\)/', $route, $types);
@@ -112,6 +112,10 @@ class Router
 
     protected function removeQueryVariables(string $url)
     {
+        // ?
+        // parks/4?category=2
+        // (parks/4)?(category=2)
+        // ($1)?($2)
         return preg_replace('/([\w\/]+)\?([\w\/=\d]+)/i', '$1', $url);
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
 namespace Core\Traits;
+
 use Core\Db;
 use PDO;
+
 trait Queryable
 {
     static protected string|null $tableName = "";
@@ -10,6 +12,7 @@ trait Queryable
 
     protected array $commands = [];
 
+    // Car::select(['id', 'model'...])
     public static function select(array $columns = ['*']): static
     {
         static::resetQuery();
@@ -21,6 +24,7 @@ trait Queryable
         return $obj;
     }
 
+    // INSERT INTO table () VALUES ()
     public static function create(array $data): int
     {
         $params = static::prepareQueryParams($data);
@@ -52,6 +56,17 @@ trait Queryable
             'keys' => implode(', ', $keys),
             'placeholders' => implode(', ', $placeholders)
         ];
+    }
+
+    public static function findBy(string $column, $value)
+    {
+        $query = "SELECT * FROM " . static::$tableName . " WHERE {$column}=:{$column}";
+
+        $query = Db::connect()->prepare($query);
+        $query->bindParam($column, $value);
+        $query->execute();
+
+        return $query->fetchObject(static::class);
     }
 
     protected static function resetQuery()
